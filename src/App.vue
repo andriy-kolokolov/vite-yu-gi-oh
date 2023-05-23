@@ -15,6 +15,6 @@ import {AppHeader, AppMain} from "./components/index.js";
 @use "./main.sass" as *
 
 .main
-  background-color: #d48f38
+  background-color: $main_container-color
 
 </style>

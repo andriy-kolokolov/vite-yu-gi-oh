@@ -1,5 +1,6 @@
 <script setup>
 import {Card, Button, Select} from "./UI/index.js";
+import Loader from "./UI/Loader.vue";
 </script>
 
 <template>
@@ -15,10 +16,17 @@ import {Card, Button, Select} from "./UI/index.js";
     </div>
     <div class="container cards-container p-4">
       <div class="search-info p-2">
-        <h3 class="txt m-0">Found 99 cards</h3>
+        <h3 class="txt m-0">Found {{ foundedCards }} cards</h3>
       </div>
-      <div class="cards-wrapper">
-        <card name="" src="https://images.ygoprodeck.com/images/cards/6983839.jpg"/>
+      <loader v-if="isLoading"/>
+      <div v-else class="cards-container__cards">
+        <card
+            v-for="(card, index) in store.cardList"
+            :key="index"
+            :name="card.name"
+            :img-src="card.card_images[0].image_url"
+            :race="card.race"
+        />
       </div>
     </div>
 
@@ -26,12 +34,36 @@ import {Card, Button, Select} from "./UI/index.js";
 </template>
 
 <script>
+import axios from "axios";
+import {store} from "../store.js";
+
 export default {
   data() {
     return {
-
+      cardList: [],
+      store,
+      isLoading: true,
+      fetchLimit: 20, // Number of items to fetch in each request
+      fetchOffset: 0, // Starting index of the items
     }
   },
+  created() {
+    this.fetchCardList()
+  },
+  methods: {
+    async fetchCardList() {
+      const requestURL = `https://db.ygoprodeck.com/api/v7/cardinfo.php?num=${this.fetchLimit}&offset=${this.fetchOffset}`;
+      try {
+        const response = await axios.get(requestURL);
+        this.store.cardList = response.data.data;
+        setTimeout(() => {
+          this.isLoading = false;
+        }, 500)
+      } catch (error) {
+        console.error("Error fetching card list:", error);
+      }
+    },
+  }
 }
 </script>
 
@@ -39,15 +71,16 @@ export default {
 .cards-container
   background-color: white
 
-.search-info
-  background-color: #212529
 
-  .txt
-    color: white
-.cards-wrapper
+  .search-info
+    background-color: #212529
+
+    .txt
+      color: white
+
+.cards-container__cards
   $grid-gap: 20px
   $grid-cols: 5
-
 
   display: grid
   grid-template-columns: repeat($grid-cols, 1fr)

@@ -3,10 +3,22 @@
 </script>
 
 <template>
-  <select class="form-select" aria-label="Default select example">
+  <select class="form-select">
 
   </select>
 </template>
+
+<script>
+export default {
+  data(){
+    return {
+      options: ['option1', 'option2', 'option3'],
+      selectedOption: "xaxxa"
+    }
+  }
+}
+
+</script>
 
 <style scoped>
 

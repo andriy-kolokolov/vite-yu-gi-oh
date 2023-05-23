@@ -3,21 +3,10 @@
 </script>
 
 <template>
-
   <div class="card d-flex flex-column">
-    <div class="card__top d-flex flex-column">
-      <div class="card-head d-flex justify-content-between">
-        <div class="card-head__name">{{ name }}</div>
-        <div class="card-head__attribute">{{ attribute }}</div>
-      </div>
-      <div class="card__type">{{ type }}</div>
-      <img class="card__img img-fluid" :src="imgSrc" alt="">
-      <div class="card__description">{{ description }}</div>
-    </div>
-    <div class="card__bot">
-      <div class="card__type">{{ name }}</div>
-      <div class="card__type">{{ race }}</div>
-    </div>
+    <img class="card__img img-fluid" :src="imgSrc" alt="">
+    <div class="card__name">{{ name }}</div>
+    <div class="card__race">{{ race }}</div>
   </div>
 </template>
 
@@ -26,24 +15,17 @@ export default {
   name: "Card",
   props: {
     name:{
-      type: String
-    },
-    attribute:{
-      type: String
-    },
-    type:{
-      type: String
+      type: String,
+      default: "name"
     },
     imgSrc: {
       type: String,
-    },
-    description:{
-      type: String
+      default: "img"
     },
     race:{
-      type: String
+      type: String,
+      default: "race"
     }
-
   },
   data() {
     return {}
@@ -52,6 +34,24 @@ export default {
 
 </script>
 
-<style scoped>
+<style lang="sass" scoped>
+@use "src/main.sass" as *
+.card
+  background-color: $card-color
+  display: flex
+  flex-direction: column
+  justify-content: space-between
+
+.card__name
+  text-align: center
+  padding: 10px
+  font-weight: bold
+  color: white
+
+.card__race
+  text-align: center
+  padding: 10px
+  color: black
+  font-weight: 500
 
 </style>
