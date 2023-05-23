@@ -1,13 +1,20 @@
 <script setup>
+import 'bootstrap/dist/css/bootstrap.css';
+import {AppHeader, AppMain} from "./components/index.js";
 
 </script>
 
 <template>
-  <div>
-
+  <div >
+    <app-header class="header" r/>
+    <app-main class="main"/>
   </div>
 </template>
 
-<style>
+<style lang="sass">
+@use "./main.sass" as *
+
+.main
+  background-color: #d48f38
 
 </style>
