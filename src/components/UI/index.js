@@ -1,11 +1,11 @@
 import Card from "./Card.vue";
-import Button from "./Button.vue";
+import SearchButton from "./SearchButton.vue";
 import SelectArchetype from "./SelectArchetype.vue";
 import Loader from "./Loader.vue";
 
 export {
     Card,
-    Button,
+    SearchButton,
     SelectArchetype,
     Loader
 }

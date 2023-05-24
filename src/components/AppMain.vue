@@ -1,22 +1,27 @@
 <script setup>
-import {Card, Button, SelectArchetype, Loader} from "./UI/index.js";
+import {Card, SearchButton, SelectArchetype, Loader} from "./UI/index.js";
 </script>
 
 <template>
   <main class="main">
     <div class="search-container d-flex justify-content-center p-3">
-      <select-archetype class="rounded-2" :store="store"/>
-      <h1>{{  }}</h1>
-      <Button class="ms-3" @click="">Search</Button>
+      <select-archetype
+          class="rounded-2"
+          :archetypes="archetypesAll"
+          @selected-archetype="handleSelect"
+      />
+      <h1>{{ }}</h1>
+      <search-button class="ms-3" @click="searchCardByArchetype">Search</search-button>
     </div>
     <div class="container cards-container p-4">
       <div class="search-info p-2">
-        <h3 class="txt m-0">Found {{ fetchLimit }} cards</h3>
+        <h3 class="txt m-0">Found {{ store.archetypes.length }} cards</h3>
       </div>
       <loader v-if="isLoading"/>
+      <div v-else-if="store.archetypes.length === 0"><h1>Select archetype and click search button.</h1></div>
       <div v-else class="cards-container__cards">
         <card
-            v-for="(card, index) in store.cardList"
+            v-for="(card, index) in store.archetypes"
             :key="index"
             :name="card.name"
             :img-src="card.card_images[0].image_url"
@@ -35,9 +40,9 @@ import {store} from "../store.js";
 export default {
   data() {
     return {
-      archetypes: [],
-      cardList: [],
+      selectArchetypeInput: '',
       store,
+      archetypesAll: [],
       isLoading: true,
       fetchLimit: 50, // Number of items to fetch in each request
       fetchOffset: 0, // Starting index of the items
@@ -49,6 +54,9 @@ export default {
     this.fetchArchetypes()
   },
   methods: {
+    handleSelect(option) {
+      this.selectArchetypeInput = option;
+    },
     async fetchCardList() {
       const requestURL = `https://db.ygoprodeck.com/api/v7/cardinfo.php?num=${this.fetchLimit}&offset=${this.fetchOffset}`;
       try {
@@ -65,12 +73,28 @@ export default {
       const requestURL = "https://db.ygoprodeck.com/api/v7/archetypes.php"
       try {
         const response = await axios.get(requestURL);
-        this.store.archetypes = response.data;
+        this.archetypesAll = response.data;
       } catch (error) {
         console.error("Error fetching archetypes list:", error);
       }
+    },
+    async searchCardByArchetype() {
+      if (this.selectArchetypeInput !== '') {
+        this.isLoading = true;
+        const requestURL = `https://db.ygoprodeck.com/api/v7/cardinfo.php?archetype=${this.selectArchetypeInput}`
+        try {
+          const response = await axios.get(requestURL);
+          this.store.archetypes = response.data.data;
+          console.log(response.data)
+        } catch (error) {
+          console.error("Error searching by archetype:", error);
+        } finally {
+          this.isLoading = false;
+        }
+      } else {
+        console.log("select archetype to search")
+      }
     }
-
   }
 }
 </script>

@@ -3,25 +3,33 @@
 </script>
 
 <template>
-  <select class="form-select">
-    <option v-for="(option, index) in store.archetypes" :value="option[index]">{{ option.archetype_name }}</option>
+  <select @change="handleSelectChange" class="form-select w-25">
+    <option
+        v-for="(option, index) in archetypes"
+        :value="option[index]"
+    >
+      {{ option.archetype_name }}
+    </option>
   </select>
 </template>
 
 <script>
 export default {
   data() {
-    return {
-      options: ['option1', 'option2', 'option3'],
-      selectedOption: "xaxxa"
-    }
+    return {}
   },
   props: {
-    store: {
+    archetypes: {
       type: Object,
       required: true
     }
+  },
+  methods: {
+    handleSelectChange() {
+      this.$emit('selected-archetype', this.$el.value)
+    }
   }
+
 }
 
 </script>
