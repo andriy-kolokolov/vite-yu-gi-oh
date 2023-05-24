@@ -1,22 +1,17 @@
 <script setup>
-import {Card, Button, Select} from "./UI/index.js";
-import Loader from "./UI/Loader.vue";
+import {Card, Button, SelectArchetype, Loader} from "./UI/index.js";
 </script>
 
 <template>
   <main class="main">
     <div class="search-container d-flex justify-content-center p-3">
-      <select class="rounded-2">
-        <option selected>Open this select menu</option>
-        <option value="1">One</option>
-        <option value="2">Two</option>
-        <option value="3">Three</option>
-      </select>
-      <Button class="ms-3">Search</Button>
+      <select-archetype class="rounded-2" :store="store"/>
+      <h1>{{  }}</h1>
+      <Button class="ms-3" @click="">Search</Button>
     </div>
     <div class="container cards-container p-4">
       <div class="search-info p-2">
-        <h3 class="txt m-0">Found {{ foundedCards }} cards</h3>
+        <h3 class="txt m-0">Found {{ fetchLimit }} cards</h3>
       </div>
       <loader v-if="isLoading"/>
       <div v-else class="cards-container__cards">
@@ -40,15 +35,18 @@ import {store} from "../store.js";
 export default {
   data() {
     return {
+      archetypes: [],
       cardList: [],
       store,
       isLoading: true,
-      fetchLimit: 20, // Number of items to fetch in each request
+      fetchLimit: 50, // Number of items to fetch in each request
       fetchOffset: 0, // Starting index of the items
+      foundedCards: "null"
     }
   },
   created() {
     this.fetchCardList()
+    this.fetchArchetypes()
   },
   methods: {
     async fetchCardList() {
@@ -63,6 +61,16 @@ export default {
         console.error("Error fetching card list:", error);
       }
     },
+    async fetchArchetypes() {
+      const requestURL = "https://db.ygoprodeck.com/api/v7/archetypes.php"
+      try {
+        const response = await axios.get(requestURL);
+        this.store.archetypes = response.data;
+      } catch (error) {
+        console.error("Error fetching archetypes list:", error);
+      }
+    }
+
   }
 }
 </script>

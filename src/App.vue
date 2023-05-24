@@ -5,7 +5,7 @@ import {AppHeader, AppMain} from "./components/index.js";
 </script>
 
 <template>
-  <div >
+  <div class="page-wrapper">
     <app-header class="header" r/>
     <app-main class="main"/>
   </div>
@@ -16,5 +16,10 @@ import {AppHeader, AppMain} from "./components/index.js";
 
 .main
   background-color: $main_container-color
+  flex-grow: 1
 
+.page-wrapper
+  height: 100vh
+  display: flex
+  flex-direction: column
 </style>
